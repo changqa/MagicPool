@@ -53,8 +53,11 @@ class ProxyCrawler:
 
         while True:
             print("开始爬取代理ip")
-            async for record in self.crawler_89ip():
-                await self._db.add(REDIS_PROXY_KEY, record)
+
+            if await self._db.count(REDIS_PROXY_KEY) < 100:
+                async for record in self.crawler_89ip():
+                    await self._db.add(REDIS_PROXY_KEY, record)
+                
             print("爬取代理ip结束")
             await sleep(CRAWEL_INTERVAL_TIME)
 

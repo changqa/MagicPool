@@ -7,7 +7,7 @@ REDIS_PROXY_KEY = "proxy"
 PROXY_TEST_COUNT = 30
 
 # 测试的网址
-TEST_URL = "http://www.baidu.com"
+TEST_URL = "http://www.xunlei.com/"
 
 # 爬取时间间隔
 CRAWEL_INTERVAL_TIME = 15 * 60  # 15分钟
