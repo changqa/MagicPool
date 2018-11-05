@@ -4,5 +4,4 @@ AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
 
 settings = {
     'debug': True,
-    'autoreload': True
 }

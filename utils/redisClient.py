@@ -78,9 +78,9 @@ class RedisClient:
         """
         count = await self.count(key)
         if count:
-            return choice(await self._conn.zrangebyscore(key, 100, 100))
+            return str(choice(await self._conn.zrangebyscore(key, 100, 100)), "utf-8")
         else:
-            return choice(await self.range(key, 0, 100))
+            return str(choice(await self.range(key, 0, 100)), "utf-8")
 
 async def main():
     redis_client = await RedisClient.current()

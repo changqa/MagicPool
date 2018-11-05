@@ -3,7 +3,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 
-from config import routers, settings
+from config import routers, settings, APP_PORT
 from crawler import ProxyCrawler
 from tester import ProxyTester
 
@@ -25,7 +25,7 @@ def main():
     app = Application(routers, **settings)
 
     http_server = HTTPServer(app)
-    http_server.listen(8000)
+    http_server.listen(APP_PORT)
 
     IOLoop.current().start()
 
