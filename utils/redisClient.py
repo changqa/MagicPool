@@ -1,9 +1,9 @@
-import aioredis
 import asyncio
-import sys
-sys.path.append("..")
 from random import choice
-from config import REDIS_IP, REDIS_PORT
+
+import aioredis
+
+from config.config import REDIS_IP, REDIS_PORT
 
 
 class RedisClient:
@@ -27,7 +27,6 @@ class RedisClient:
                 f'redis://{redis_ip}:{reids_port}'
             )
             cls._self = cls(conn)
-            print("创建..")
 
         return cls._self
 
@@ -82,6 +81,7 @@ class RedisClient:
         else:
             return str(choice(await self.range(key, 0, 100)), "utf-8")
 
+
 async def main():
     redis_client = await RedisClient.current()
     # await redis_client.add("name", "lisi")
@@ -89,9 +89,10 @@ async def main():
     # await redis_client.increase("name", "lisi")
     # await redis_client.delLowScore("name")
     # rst = await redis_client.range("proxy", 0, 100)
-
     # rst = await redis_client.get("proxy")
+
     # print(rst)
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

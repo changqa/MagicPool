@@ -7,9 +7,9 @@
 from tornado.gen import Multi, sleep
 from tornado.httpclient import AsyncHTTPClient, HTTPError, HTTPRequest
 
-from config import (PROXY_TEST_COUNT, REDIS_PROXY_KEY, TEST_INTERVAL_TIME,
-                    TEST_URL)
-from utils import RedisClient
+from config.config import (TEST_COUNT, REDIS_PROXY_KEY,
+                           TEST_INTERVAL_TIME, TEST_URL)
+from utils.redisClient import RedisClient
 
 
 class ProxyTester:
@@ -57,13 +57,13 @@ class ProxyTester:
         while True:
             print("开始测试...")
             proxy_count = await self._db.count(REDIS_PROXY_KEY, 0, 100)
-            for start in range(0, proxy_count, PROXY_TEST_COUNT):
+            for start in range(0, proxy_count, TEST_COUNT):
                 end = min(start+PROXY_TEST_COUNT, proxy_count)
                 print(f"正在测试{start} - {end} 的代理")
                 proxys = await self._db.range(REDIS_PROXY_KEY, start, end)
                 await Multi(map(self.test_single_proxy, proxys))
                 print(f"{start}-{end} 条代理已测完")
-            
+
             print("测试结束...")
             await sleep(TEST_INTERVAL_TIME)
 

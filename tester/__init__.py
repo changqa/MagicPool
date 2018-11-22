@@ -1,1 +1,0 @@
-from .proxyTester import ProxyTester

@@ -1,4 +1,4 @@
-from api import ProxyHandler
+from api.proxyHandler import ProxyHandler
 
 __all__ = ['routers']
 

@@ -1,5 +1,5 @@
 # MagicPool
-可以获取到各种账号，代理ip等资源的MagicPool
+代理池, 迅雷池未实现
 
 # 开发环境
 python3.6以上

@@ -2,9 +2,10 @@ REDIS_IP = "127.0.0.1"
 REDIS_PORT = "6379"
 
 REDIS_PROXY_KEY = "proxy"
+REDIS_XUNLEI_KEY = "xunlei"
 
 # 每次批量测试的proxy的个数
-PROXY_TEST_COUNT = 30
+TEST_COUNT = 30
 
 # 测试的网址
 TEST_URL = "http://www.xunlei.com/"

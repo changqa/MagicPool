@@ -1,26 +1,21 @@
 import re
 
+from tornado.gen import sleep
 from tornado.httpclient import AsyncHTTPClient
 from tornado.ioloop import IOLoop
-from tornado.gen import sleep
 
-from config import REDIS_PROXY_KEY, CRAWEL_INTERVAL_TIME
-from utils import RedisClient
+from config.config import CRAWEL_INTERVAL_TIME, REDIS_PROXY_KEY
+from utils.redisClient import RedisClient
+
+from .baseCrawler import BaseCrawler
 
 
-class ProxyCrawler:
+class ProxyCrawler(BaseCrawler):
 
     _self = None
 
     def __init__(self, db):
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-            "AppleWebKit/537.36 (KHTML, like Gecko)"
-            "Chrome/54.0.2840.71 Safari/537.36",
-            'Accept-Encoding': 'gzip, deflate, sdch',
-            'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
-        }
-
+        super().__init__()
         self._db = db
 
     @classmethod
@@ -57,9 +52,10 @@ class ProxyCrawler:
             if await self._db.count(REDIS_PROXY_KEY) < 100:
                 async for record in self.crawler_89ip():
                     await self._db.add(REDIS_PROXY_KEY, record)
-                
+
             print("爬取代理ip结束")
             await sleep(CRAWEL_INTERVAL_TIME)
+
 
 if __name__ == '__main__':
     crawler = ProxyCrawler.current()

@@ -1,6 +1,7 @@
 from tornado.web import RequestHandler
-from utils import RedisClient
-from config import REDIS_PROXY_KEY
+
+from config.config import REDIS_PROXY_KEY
+from utils.redisClient import RedisClient
 
 
 class ProxyHandler(RequestHandler):
