@@ -55,8 +55,43 @@ class XunleiCrawler(BaseCrawler):
             else:
                 print("crawler_89ip 匹配代理失败")
 
-    async def run(self):
+    async def crawl_xunl8_index(self):
+        """ 爬取 迅雷吧(http://www.xunl8.com/) 的首页获取链接
 
+            Returns:
+                返回链接
+        """
+        url = 'http://www.xunl8.com/'
+
+        http_client = AsyncHTTPClient()
+        response = await http_client.fetch(url, headers=self.headers)
+        if response.code == 200:
+            doc = pq(str(response.body, 'utf-8'))
+            rst = doc("#divMain .post-title a")
+            for record in rst.items():
+                yield record.attr("href")
+
+    async def crawl_xunl8(self):
+        """爬取 迅雷吧 的vip账号
+
+        """
+        http_client = AsyncHTTPClient()
+
+        async for url in self.crawl_xunl8_index():
+            response = await http_client.fetch(url, headers=self.headers)
+            if response.code == 200:
+
+                doc = pq(str(response.body), 'utf-8')
+                rst = doc("#divMain .post-body")
+
+                for record in re.finditer(r'账号：(.*?) 密码：(.*?)<br/>',
+                                          str(response.body, 'utf-8')):
+                    yield (record.group(1), record.group(2))
+            else:
+                print("crawler_89ip 匹配代理失败")
+
+
+    async def run(self):
         async for account in self.crawl_fenxiangdashi():
             print(account)
             value = json.dumps(
@@ -67,7 +102,10 @@ class XunleiCrawler(BaseCrawler):
 
 async def main():
     crawler = await XunleiCrawler.current()
-    await crawler.run()
+    await crawler.crawl_xunl8_index()
+
+    # crawler = await XunleiCrawler.current()
+    # await crawler.run()
 
 if __name__ == '__main__':
     IOLoop.current().run_sync(main)
