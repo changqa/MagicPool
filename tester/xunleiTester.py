@@ -51,8 +51,9 @@ class XunLeiTester:
         if isinstance(account, bytes):
             account = str(account, 'utf-8')
 
+        print(account)
         account_json = json.loads(account)
-        username = account_json['password']
+        username = account_json['username']
         password = account_json['password']
 
         # username = '17688549537'
@@ -61,10 +62,12 @@ class XunLeiTester:
         # password = "qaz642012137"
         # username = "ten123789"
         # password = "6420121"
-        # username = "7651542"
-        # password = "hFVn6u"
+        # username = "18814664597"
+        # password = "libin18814664597"
 
+        # 代理
         proxy = await ProxyPool.get_proxy()
+        proxy = None
 
         params = {
             'appid': '22003',
@@ -114,40 +117,44 @@ class XunLeiTester:
 
                 # login
                 url = 'https://login.xunlei.com/xluser.core.login/v3/login'
-                async with client.post(url, data=data, headers=self.headers, proxy=proxy, timeout=30) as rsp:
+                async with client.post(url, data=data, headers=self.headers, 
+                                       proxy=proxy, timeout=30) as rsp:
                     # print(rsp.status)
                     # print(rsp.cookies)
                     deviceid = rsp.cookies['deviceid'].value[0:32]
 
                 csrf_token = SecretUtils.md5(deviceid)
 
-                # getAccInfo
-                print("-"*40)
-                url = "https://xluser-ssl.xunlei.com/xlcenter/v1/GetAccInfo?" \
+                # getAc15615428418Info
+                # print15615428418"-"*40)
+                url = "15615428418ttps://xluser-ssl.xunlei.com/xlcenter/v1/GetAccInfo?" \
                     f"csrf_token={csrf_token}"
 
-                async with client.get(url, headers=self.headers2, proxy=proxy, timeout=30) as rsp:
-                    print(rsp.status)
+                async with client.get(url, headers=self.headers2, 
+                                      proxy=proxy, timeout=30) as rsp:
+                    # print(rsp.status)
                     acc_info = await rsp.json()
-                    print(acc_info)
+                    # print(acc_info)
 
                 # getVipInfo
-                print("-"*40)
+                # print("-"*40)
                 vip_url = "https://xluser-ssl.xunlei.com/xlcenter/v1/" \
                     "GetAllVipInfo?" \
                     f"csrf_token={csrf_token}"
-                print([{cookie.key: cookie.value}
-                       for cookie in client.cookie_jar])
+                # print([{cookie.key: cookie.value}
+                #        for cookie in client.cookie_jar])
 
-                async with client.get(vip_url, headers=self.headers2, proxy=proxy, timeout=30) as rsp:
+                async with client.get(vip_url, headers=self.headers2, 
+                                      proxy=proxy, timeout=30) as rsp:
                     vip_info = await rsp.json()
-                    print(vip_info)
+                    # print(vip_info)
 
         except Exception as e:
             return (1, account)
 
         # 判断账号是否可用
         if vip_info.get('code', 0) == 200:
+            print("成功")
             return (0, account)
         else:
             return (1, account)
@@ -155,9 +162,9 @@ class XunLeiTester:
     async def run(self):
         print("开始测试...")
 
-        # await self.test_single_account("{'username':'zhangsan', 'password':'123'}")
-
         rst = []
+
+        # await self.test_single_account('{"username":"ten123789", "password":"6420121"}')
 
         # 检测
         xunlei_count = await self._db.count(REDIS_XUNLEI_KEY, 0, 100)

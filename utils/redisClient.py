@@ -85,13 +85,13 @@ class RedisClient:
 async def main():
     redis_client = await RedisClient.current()
     # await redis_client.add("name", "lisi")
-    await redis_client.decrease("xunlei", "{'username':'99715', 'password':'2l8J3e1'}")
+    # await redis_client.decrease("xunlei", "{'username':'99715', 'password':'2l8J3e1'}")
     # await redis_client.increase("name", "lisi")
     # await redis_client.delLowScore("name")
-    # rst = await redis_client.range("proxy", 0, 100)
+    rst = await redis_client.range("xunlei", 0, 100)
     # rst = await redis_client.get("proxy")
 
-    # print(rst)
+    print(rst)
 
 
 if __name__ == '__main__':
