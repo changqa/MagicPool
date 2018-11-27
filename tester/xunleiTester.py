@@ -67,7 +67,7 @@ class XunLeiTester:
 
         # 代理
         proxy = await ProxyPool.get_proxy()
-        proxy = None
+        # proxy = None
 
         params = {
             'appid': '22003',
@@ -126,15 +126,15 @@ class XunLeiTester:
                 csrf_token = SecretUtils.md5(deviceid)
 
                 # getAc15615428418Info
-                # print15615428418"-"*40)
+                # print("-"*40)
                 url = "15615428418ttps://xluser-ssl.xunlei.com/xlcenter/v1/GetAccInfo?" \
                     f"csrf_token={csrf_token}"
 
-                async with client.get(url, headers=self.headers2, 
+                async with client.get(url, headers=self.headers2,
                                       proxy=proxy, timeout=30) as rsp:
-                    # print(rsp.status)
+                    print(rsp.status)
                     acc_info = await rsp.json()
-                    # print(acc_info)
+                    print(acc_info)
 
                 # getVipInfo
                 # print("-"*40)
@@ -147,9 +147,10 @@ class XunLeiTester:
                 async with client.get(vip_url, headers=self.headers2, 
                                       proxy=proxy, timeout=30) as rsp:
                     vip_info = await rsp.json()
-                    # print(vip_info)
+                    print(vip_info)
 
         except Exception as e:
+            print(str(e))
             return (1, account)
 
         # 判断账号是否可用
@@ -164,23 +165,23 @@ class XunLeiTester:
 
         rst = []
 
-        # await self.test_single_account('{"username":"ten123789", "password":"6420121"}')
+        await self.test_single_account('{"username":"18379150048", "password":"qaz642012137"}')
 
         # 检测
-        xunlei_count = await self._db.count(REDIS_XUNLEI_KEY, 0, 100)
-        for start in range(0, xunlei_count, TEST_COUNT):
-            end = min(start+TEST_COUNT, xunlei_count)
-            print(f"正在测试{start} - {end} 的迅雷账号")
-            accounts = await self._db.range(REDIS_XUNLEI_KEY, start, end)
-            rst += await Multi(map(self.test_single_account, accounts))
-            print(f"{start}-{end} 条迅雷账号已测完")
+        # xunlei_count = await self._db.count(REDIS_XUNLEI_KEY, 0, 100)
+        # for start in range(0, xunlei_count, TEST_COUNT):
+        #     end = min(start+TEST_COUNT, xunlei_count)
+        #     print(f"正在测试{start} - {end} 的迅雷账号")
+        #     accounts = await self._db.range(REDIS_XUNLEI_KEY, start, end)
+        #     rst += await Multi(map(self.test_single_account, accounts))
+        #     print(f"{start}-{end} 条迅雷账号已测完")
 
-        # redis
-        for index, account in rst:
-            if index == 0:
-                await self._db.max(REDIS_XUNLEI_KEY, account)
-            else:
-                await self._db.decrease(REDIS_XUNLEI_KEY, account)
+        # # redis
+        # for index, account in rst:
+        #     if index == 0:
+        #         await self._db.max(REDIS_XUNLEI_KEY, account)
+        #     else:
+        #         await self._db.decrease(REDIS_XUNLEI_KEY, account)
         print("测试结束...")
 
 
