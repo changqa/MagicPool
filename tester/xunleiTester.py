@@ -12,7 +12,6 @@ from utils.redisClient import RedisClient
 from utils.secretUtils import SecretUtils
 from feng_libs.data import ProxyPool
 
-
 class XunLeiTester:
 
     _self = None

@@ -1,10 +1,10 @@
 # MagicPool
 代理池
 迅雷账号池。暂未完成。
+视频池
 
 # 开发环境
 python3.6以上
-redis
 
 ## 使用的第三方库
 **tornado**
@@ -28,3 +28,5 @@ redis
 测试
 - utils
 工具
+- data
+本地数据

@@ -58,7 +58,7 @@ class ProxyTester:
             print("开始测试...")
             proxy_count = await self._db.count(REDIS_PROXY_KEY, 0, 100)
             for start in range(0, proxy_count, TEST_COUNT):
-                end = min(start+PROXY_TEST_COUNT, proxy_count)
+                end = min(start+TEST_COUNT, proxy_count)
                 print(f"正在测试{start} - {end} 的代理")
                 proxys = await self._db.range(REDIS_PROXY_KEY, start, end)
                 await Multi(map(self.test_single_proxy, proxys))

@@ -12,9 +12,10 @@ class ProxyHandler(RequestHandler):
 
     async def count(self):
         redis_client = await RedisClient.current()
-        return await redis_client.count(REDIS_PROXY_KEY)
+        return str(await redis_client.count(REDIS_PROXY_KEY))
 
-    async def get(self):
-        method = self.get_argument("method", None)
+    async def get(self, method):
+        print(method)
         result = await eval("self."+method)()
-        return self.write(str(result))
+        print(type(result))
+        return self.write(result)
