@@ -33,8 +33,16 @@ class VideoCrawler(BaseCrawler):
             # 获取 video_id, video_range集数
             resp = await client.get(query_url)
             text = await resp.text()
-            video_id = re.search(r"id: '(.*?)';", text).group(1)
-            video_range = re.search(r"initRange: '(.*?)';", text).group(1)
+
+            video_id_grouped = re.search(r"id: '(.*?)';", text)
+            if not video_id_grouped:
+                raise Exception("仅支持腾讯视频搜索，搜索不到该视频")
+            video_id = video_id_grouped.group(1)
+
+            video_range_grouped = re.search(r"initRange: '(.*?)';", text)
+            if not video_range_grouped:
+                raise Exception("仅持连续剧，其他暂不支持")
+            video_range = video_range_grouped.group(1)
 
             # 获取视频级数信息
             data = {
@@ -63,8 +71,12 @@ class VideoCrawler(BaseCrawler):
 
 async def main():
     crawler = VideoCrawler()
-    await crawler.get_video_url_tencent("夜天子")
-
+    try:
+        url_list = await crawler.get_video_url_tencent("将夜")
+    except Exception as e:
+        print(str(e))
+    else:
+        print(url_list)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

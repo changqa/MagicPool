@@ -1,7 +1,16 @@
 # MagicPool
 代理池
 迅雷账号池。暂未完成。
-视频池
+视频池。 暂仅支持腾讯连续剧。
+
+# 接口  (请善良对待它们)
+## 代理ip
+www.wenfengboy.com/proxy/gain    //获取代理ip
+www.wenfengboy.com/proxy/count   //代理ip池的数量
+
+## 视频
+www.wenfengboy.com/video/get_video_interface     // 获取视频解析接口
+www.wenfengboy.com/video/get_video_url_list?video_name=      // 获取视频url
 
 # 开发环境
 python3.6以上

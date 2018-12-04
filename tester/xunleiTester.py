@@ -50,7 +50,6 @@ class XunLeiTester:
         if isinstance(account, bytes):
             account = str(account, 'utf-8')
 
-        print(account)
         account_json = json.loads(account)
         username = account_json['username']
         password = account_json['password']

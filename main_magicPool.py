@@ -4,8 +4,8 @@ from tornado.ioloop import IOLoop
 from tornado.web import Application
 
 from config import routers, settings, APP_PORT
-from crawler import ProxyCrawler
-from tester import ProxyTester
+from crawler.proxyCrawler import ProxyCrawler
+from tester.proxyTester import ProxyTester
 
 
 async def run():

@@ -1,4 +1,5 @@
-from api import ProxyHandler, VideoHandler
+from api.videoHandler import VideoHandler
+from api.proxyHandler import ProxyHandler
 
 __all__ = ['routers']
 
