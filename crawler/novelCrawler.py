@@ -9,10 +9,11 @@ from feng_libs.data.proxyPool import ProxyPool
 class NovelCrawler(BaseCrawler):
 
     def __init__(self):
-        self.base_url_biquge = "https://www.biqudu.com"
+        self.base_url_biqudu = "https://www.biqudu.com"
+        self.base_url_biquyun = "http://www.biquyun.com/"
         self.timeout = 30
 
-    async def crawl_biquge_brower(self, name):
+    async def crawl_biqudu_brower(self, name):
         """ 在笔趣阁中搜索小说得到目录url
 
         Args:
@@ -25,7 +26,7 @@ class NovelCrawler(BaseCrawler):
             超时
         """
 
-        query_url = f"{self.base_url_biquge}/searchbook.php"
+        query_url = f"{self.base_url_biqudu}/searchbook.php"
         params = {
             "keyword": name
         }
@@ -42,15 +43,15 @@ class NovelCrawler(BaseCrawler):
             except Exception as e:
                 raise Exception("未搜索到该小说")
 
-            resp = await client.get(self.base_url_biquge+book_url,
+            resp = await client.get(self.base_url_biqudu+book_url,
                                     headers=self.headers, ssl=False)
             resp_text = await resp.text()
             book_section_a = BeautifulSoup(
                 resp_text, "lxml").select("#list > dl > dd > a")
             return [_['href'] for _ in book_section_a]
 
-    async def crawl_biquge_content(self, url):
-        """ 根据url爬去笔趣阁的章节内容
+    async def crawl_biqudu_content(self, url):
+        """ 根据url爬去biqudu的章节内容
 
             Args:
                 url: 章节url
@@ -58,7 +59,7 @@ class NovelCrawler(BaseCrawler):
 
         timeout = aiohttp.ClientTimeout(total=self.timeout)
         async with aiohttp.ClientSession(timeout=timeout) as client:
-            resp = await client.get(self.base_url_biquge+url,
+            resp = await client.get(self.base_url_biqudu+url,
                                     headers=self.headers, ssl=False)
 
             resp_text = await resp.text()
@@ -68,6 +69,11 @@ class NovelCrawler(BaseCrawler):
             [script.extract() for script in soup('script')]
 
             return soup.text.lstrip().rstrip()
+
+    async def crawl_biquyun_brower(self, name):
+
+        async with aiohttp.ClientSession() as client:
+            resp = client.get(url)
 
     async def crawl_brower(self, name):
         """ 对外提供获取小说目录url的接口
@@ -83,7 +89,7 @@ class NovelCrawler(BaseCrawler):
         while retry_number < self.retry_max_num:
 
             try:
-                novel_browler = await self._crawl_biquge_brower(name)
+                novel_browler = await self.crawl_biqudu_brower(name)
                 break
             except Exception as e:
                 print(f"retry {retry_number}")
@@ -102,10 +108,10 @@ class NovelCrawler(BaseCrawler):
 
 async def main():
     novelCrawler = NovelCrawler()
-    novel_brower = await novelCrawler.crawl_biquge_brower("人皇纪")
+    novel_brower = await novelCrawler.crawl_biqudu_brower("人皇纪")
     print(novel_brower)
 
-    # novel_content = await novelCrawler.crawl_biquge_content("/16_16431/9883799.html")
+    # novel_content = await novelCrawler.crawl_biqudu_content("/16_16431/9883799.html")
     # print(novel_content)
 
     # novel_brower = await novelCrawler.crawl_brower("人皇纪")
