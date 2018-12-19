@@ -25,9 +25,6 @@ class NovelCrawler(BaseCrawler):
             超时
         """
 
-        proxy = await ProxyPool.get_proxy()
-        proxy = None
-
         query_url = f"{self.base_url_biquge}/searchbook.php"
         params = {
             "keyword": name
@@ -36,8 +33,7 @@ class NovelCrawler(BaseCrawler):
         timeout = aiohttp.ClientTimeout(total=self.timeout)
         async with aiohttp.ClientSession(timeout=timeout) as client:
             resp = await client.get(query_url, params=params,
-                                    headers=self.headers, ssl=False,
-                                    proxy=proxy)
+                                    headers=self.headers, ssl=False)
             resp_text = await resp.text()
 
             try:
