@@ -13,14 +13,15 @@ class NovelCrawler(BaseCrawler):
         self.base_url_biquyun = "http://www.biquyun.com/"
         self.timeout = 30
 
-    async def crawl_biqudu_brower(self, name):
+    async def crawl_biqudu_index(self, name):
         """ 在笔趣阁中搜索小说得到目录url
 
         Args:
             name: 小说名
 
         Returns:
-            novel_brower: 小说的章节目录列表，list 
+            novel_index: 小说目录首页页面的数据
+            (作者, 最后更新时间, {小说章节名: 小说url, ....})
 
         Exceptions:
             超时
@@ -40,21 +41,33 @@ class NovelCrawler(BaseCrawler):
             try:
                 book_url = BeautifulSoup(resp_text, 'lxml').select(
                     "#hotcontent > div > div > div.image > a")[0]['href']
-            except Exception as e:
+            except Exception:
                 raise Exception("未搜索到该小说")
 
             resp = await client.get(self.base_url_biqudu+book_url,
                                     headers=self.headers, ssl=False)
             resp_text = await resp.text()
-            book_section_a = BeautifulSoup(
-                resp_text, "lxml").select("#list > dl > dd > a")
-            return [_['href'] for _ in book_section_a]
+
+            soup = BeautifulSoup(resp_text, "lxml")
+
+            # 小说info
+            author = soup.select("#info p")[0].string
+            last_update_time = soup.select("#info p")[2].string
+
+            # 小说章节名和url
+            book_section_a = soup.select("#list > dl > dd > a")
+            content = dict()
+            [content.update({_.string: _['href']}) for _ in book_section_a]
+
+            return (author, last_update_time, content)
 
     async def crawl_biqudu_content(self, url):
         """ 根据url爬去biqudu的章节内容
 
             Args:
                 url: 章节url
+
+            Returns: (章节名, 章节内容)
         """
 
         timeout = aiohttp.ClientTimeout(total=self.timeout)
@@ -63,12 +76,17 @@ class NovelCrawler(BaseCrawler):
                                     headers=self.headers, ssl=False)
 
             resp_text = await resp.text()
-            soup = BeautifulSoup(resp_text, 'lxml').select("#content")[0]
+            soup = BeautifulSoup(resp_text, 'lxml')
 
+            # 小说章节名
+            content_header = soup.select(".bookname")[0].h1.string
+
+            # 文本内容
+            content = soup.select("#content")[0]
             # 清除script标签
-            [script.extract() for script in soup('script')]
+            [content.extract() for content in content('script')]
 
-            return soup.text.lstrip().rstrip()
+            return (content_header, content.text.lstrip().rstrip())
 
     async def crawl_biquyun_brower(self, name):
 
@@ -108,14 +126,11 @@ class NovelCrawler(BaseCrawler):
 
 async def main():
     novelCrawler = NovelCrawler()
-    novel_brower = await novelCrawler.crawl_biqudu_brower("人皇纪")
-    print(novel_brower)
+    novel_index = await novelCrawler.crawl_biqudu_index("人皇纪")
+    # print(novel_index)
 
-    # novel_content = await novelCrawler.crawl_biqudu_content("/16_16431/9883799.html")
+    # novel_content = await novelCrawler.crawl_biqudu_content("/22_22509/2470305.html")
     # print(novel_content)
-
-    # novel_brower = await novelCrawler.crawl_brower("人皇纪")
-    # print(novel_brower)
 
 
 if __name__ == "__main__":

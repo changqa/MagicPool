@@ -17,6 +17,8 @@ async def run():
     proxy_tester = await ProxyTester.current()
     IOLoop.current().spawn_callback(proxy_tester.run)
 
+    pass
+
 
 def main():
     IOLoop.current().spawn_callback(run)

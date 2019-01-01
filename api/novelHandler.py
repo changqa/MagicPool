@@ -10,8 +10,17 @@ class NovelHandler(BaseHandler):
         if not name:
             return self.fail("请输入书名")
         norvelCrawler = NovelCrawler()
-        brower = await norvelCrawler.crawl_biquge_brower(name)
-        return self.success(brower)
+
+        try:
+            author, last_update_time, content = await norvelCrawler.crawl_biqudu_index(name)
+        except Exception as e:
+            return self.fail(str(e))
+
+        return self.success({
+            "author": author,
+            "last_update_time": last_update_time,
+            "content": content
+        })
 
     async def get_content(self):
 
@@ -20,8 +29,8 @@ class NovelHandler(BaseHandler):
             return self.fail("请输入url")
 
         norvelCrawler = NovelCrawler()
-        content = await norvelCrawler.crawl_biquge_content(url)
-        return self.success(content)
+        header, content = await norvelCrawler.crawl_biqudu_content(url)
+        return self.success({"header": header, "content": content})
 
     async def get(self, method):
         return await eval("self."+method)()
