@@ -36,6 +36,7 @@ www.wenfengboy.com/novel/get_browser?name=
 <br>
 <br>
 获取小说具体章节的标题及内容
+<br>
 www.wenfengboy.com/novel/get_content?url=
 
 ## 开发环境
