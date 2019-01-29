@@ -127,7 +127,7 @@ class NovelCrawler(BaseCrawler):
 async def main():
     novelCrawler = NovelCrawler()
     novel_index = await novelCrawler.crawl_biqudu_index("人皇纪")
-    # print(novel_index)
+    print(novel_index)
 
     # novel_content = await novelCrawler.crawl_biqudu_content("/22_22509/2470305.html")
     # print(novel_content)
