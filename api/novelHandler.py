@@ -1,5 +1,5 @@
 from .baseHandler import BaseHandler
-from crawler.novelCrawler import NovelCrawler
+from crawler.novel.novelCrawler import NovelCrawler
 
 
 class NovelHandler(BaseHandler):
