@@ -1,8 +1,6 @@
-from tornado.web import RequestHandler
-
-from config.config import REDIS_PROXY_KEY
+from MagicPool.config import REDIS_PROXY_KEY
 from utils.redisClient import RedisClient
-from .baseHandler import BaseHandler
+from MagicPool.baseHandler import BaseHandler
 
 
 class ProxyHandler(BaseHandler):

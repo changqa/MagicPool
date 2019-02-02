@@ -1,13 +1,8 @@
-import asyncio
-import time
 import json
 
 import aiohttp
-from tornado.gen import Multi
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from tornado.ioloop import IOLoop
 
-from config.config import REDIS_XUNLEI_KEY, TEST_COUNT
 from utils.redisClient import RedisClient
 from utils.secretUtils import SecretUtils
 from feng_libs.data import ProxyPool

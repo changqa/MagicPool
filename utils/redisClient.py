@@ -3,7 +3,7 @@ from random import choice
 
 import aioredis
 
-from config.config import REDIS_IP, REDIS_PORT
+from MagicPool.config import REDIS_IP, REDIS_PORT
 
 
 class RedisClient:

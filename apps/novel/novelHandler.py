@@ -1,5 +1,6 @@
-from .baseHandler import BaseHandler
-from crawler.novel.novelCrawler import NovelCrawler
+from apps.novel.crawler.novelCrawler_biqudu import NovelCrawler_biqudu
+
+from MagicPool.baseHandler import BaseHandler
 
 
 class NovelHandler(BaseHandler):
@@ -9,7 +10,7 @@ class NovelHandler(BaseHandler):
         name = self.get_argument("name", None)
         if not name:
             return self.fail("请输入书名")
-        norvelCrawler = NovelCrawler()
+        norvelCrawler = NovelCrawler_biqudu()
 
         try:
             author, last_update_time, content = await norvelCrawler.crawl_biqudu_index(name)
@@ -28,7 +29,7 @@ class NovelHandler(BaseHandler):
         if not url:
             return self.fail("请输入url")
 
-        norvelCrawler = NovelCrawler()
+        norvelCrawler = NovelCrawler_biqudu()
         header, content = await norvelCrawler.crawl_biqudu_content(url)
         return self.success({"header": header, "content": content})
 

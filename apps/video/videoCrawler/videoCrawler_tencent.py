@@ -4,10 +4,10 @@ import re
 
 from aiohttp import ClientSession
 
-from .baseCrawler import BaseCrawler
+from MagicPool.baseCrawler import BaseCrawler
 
 
-class VideoCrawler(BaseCrawler):
+class VideoCrawler_tencent(BaseCrawler):
     """ 爬取视频链接。
 
     """
@@ -15,7 +15,7 @@ class VideoCrawler(BaseCrawler):
     def __init__(self):
         pass
 
-    async def get_video_url_tencent(self, video_name):
+    async def get_video_url(self, video_name):
         """ 从腾讯网. 根据剧名爬取所有集数的url
 
             Params:
@@ -70,9 +70,9 @@ class VideoCrawler(BaseCrawler):
 
 
 async def main():
-    crawler = VideoCrawler()
+    crawler = VideoCrawler_tencent()
     try:
-        url_list = await crawler.get_video_url_tencent("将夜")
+        url_list = await crawler.get_video_url("将夜")
     except Exception as e:
         print(str(e))
     else:

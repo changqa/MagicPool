@@ -6,9 +6,9 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.ioloop import IOLoop
 
 from utils.redisClient import RedisClient
-from config.config import REDIS_XUNLEI_KEY
+from MagicPool.config import REDIS_XUNLEI_KEY
 
-from .baseCrawler import BaseCrawler
+from MagicPool.baseCrawler import BaseCrawler
 
 
 class XunleiCrawler(BaseCrawler):

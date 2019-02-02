@@ -1,12 +1,13 @@
-from tornado.gen import sleep
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 
-from config import routers, settings, APP_PORT
-from crawler.proxyCrawler import ProxyCrawler
-from tester.proxyTester import ProxyTester
+from MagicPool.routers import routers
+from MagicPool.settings import settings
+from MagicPool.config import APP_PORT
 
+from apps.proxy.proxyCrawler import ProxyCrawler
+from apps.proxy.proxyTester import ProxyTester
 
 async def run():
     # crawel proxy ip run

@@ -7,8 +7,8 @@
 from tornado.gen import Multi, sleep
 from tornado.httpclient import AsyncHTTPClient, HTTPError, HTTPRequest
 
-from config.config import (TEST_COUNT, REDIS_PROXY_KEY,
-                           TEST_INTERVAL_TIME, TEST_URL)
+from MagicPool.config import (TEST_COUNT, REDIS_PROXY_KEY,
+                              TEST_INTERVAL_TIME, TEST_URL)
 from utils.redisClient import RedisClient
 
 

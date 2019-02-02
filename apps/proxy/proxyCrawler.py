@@ -3,15 +3,15 @@ import re
 from tornado.gen import sleep
 from tornado.httpclient import AsyncHTTPClient
 from tornado.ioloop import IOLoop
+import datetime
 
-from config.config import CRAWEL_INTERVAL_TIME, REDIS_PROXY_KEY
+from MagicPool.config import CRAWEL_INTERVAL_TIME, REDIS_PROXY_KEY
 from utils.redisClient import RedisClient
 
-from .baseCrawler import BaseCrawler
+from MagicPool.baseCrawler import BaseCrawler
 
 
 class ProxyCrawler(BaseCrawler):
-
     _self = None
 
     def __init__(self, db):
@@ -31,14 +31,14 @@ class ProxyCrawler(BaseCrawler):
         异步生成器, 获取ip
         """
         url = "http://www.89ip.cn/tqdl.html?" \
-              f"api=1&num={count}&port={port}&address=&isp="
+            f"api=1&num={count}&port={port}&address=&isp="
 
         http_client = AsyncHTTPClient()
         response = await http_client.fetch(url, headers=self.headers)
         if response.code == 200:
             for record in re.finditer(
-                "(\d+.\d+.\d+.\d+:\d+)",
-                str(response.body)
+                    "(\d+.\d+.\d+.\d+:\d+)",
+                    str(response.body)
             ):
                 yield record.group(0)
         else:
@@ -47,13 +47,13 @@ class ProxyCrawler(BaseCrawler):
     async def run(self):
 
         while True:
-            print("开始爬取代理ip")
+            print(f"{datetime.datetime.now()}: 开始爬取代理ip")
 
             if await self._db.count(REDIS_PROXY_KEY) < 100:
                 async for record in self.crawler_89ip():
                     await self._db.add(REDIS_PROXY_KEY, record)
 
-            print("爬取代理ip结束")
+            print(f"{datetime.datetime.now()}:爬取代理ip结束")
             await sleep(CRAWEL_INTERVAL_TIME)
 
 
